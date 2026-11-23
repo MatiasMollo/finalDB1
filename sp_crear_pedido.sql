@@ -7,8 +7,8 @@ AS BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION;
 
-		IF NOT EXISTS (SELECT 1 FROM clientes WHERE id = @cliente_id)
-			THROW 50010, 'El cliente no existe', 1;
+		IF NOT EXISTS (SELECT 1 FROM clientes WHERE id = @cliente_id and activo = 1)
+			THROW 50010, 'El cliente no existe o está inactivo', 1;
 
 		IF NOT EXISTS (SELECT 1 FROM libros where id = @libro_id)
 			THROW 50020, 'El libro no existe en la base de datos', 1;
@@ -28,6 +28,8 @@ AS BEGIN
 			@cantidad,
 			(SELECT precio FROM libros WHERE id = @libro_id)
 		);
+
+		UPDATE libros set stock = stock - @cantidad where id = @libro_id;
 
 		COMMIT;
 	END TRY

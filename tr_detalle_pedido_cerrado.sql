@@ -3,7 +3,11 @@ ON detalle_pedidos
 AFTER INSERT, UPDATE
 AS
 BEGIN 
-	IF (SELECT estado FROM pedidos as p WHERE p.id = (SELECT pedido_id FROM inserted)) IN ('PAGADO','CANCELADO')
+	IF EXISTS (
+		SELECT 1 FROM inserted as i 
+		JOIN pedidos as p ON p.id = i.pedido_id
+		WHERE p.estado IN ('PAGADO','CANCELADO')
+	)
 	BEGIN
 		ROLLBACK TRANSACTION;
 		THROW 50010, 'El estado del pago no permite modificar su detalle', 1;

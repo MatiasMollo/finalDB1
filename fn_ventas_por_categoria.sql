@@ -15,6 +15,6 @@ RETURNS TABLE AS RETURN
 		SELECT dp.libro_id, dp.cantidad, dp.precio_unitario FROM detalle_pedidos as dp
 		JOIN pedidos as p ON p.id = dp.pedido_id
 		WHERE p.estado != 'CANCELADO' AND p.fecha BETWEEN @desde AND @hasta
-	) as dp on dp.libro_id = l.
+	) as dp on dp.libro_id = l.id
 	GROUP BY c.nombre
 )

@@ -2,12 +2,15 @@ CREATE OR ALTER FUNCTION fn_total_comprado_cliente
 (
 	@cliente_id INT
 )
-RETURNS TABLE
+RETURNS DECIMAL(10,2)
 AS 
-RETURN
-(
-	SELECT SUM(dp.cantidad * dp.precio_unitario) as total_gastado FROM detalle_pedidos as dp
+BEGIN
+	DECLARE @total DECIMAL(10,2);
+
+	SELECT @total = SUM(dp.cantidad * dp.precio_unitario)
+	FROM detalle_pedidos as dp
 	JOIN pedidos as p on p.id = dp.pedido_id
 	WHERE p.cliente_id = @cliente_id AND p.estado != 'CANCELADO'
-	GROUP BY p.cliente_id
-);
+
+	RETURN ISNULL(@total,0);
+END;

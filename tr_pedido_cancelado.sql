@@ -4,7 +4,10 @@ AFTER UPDATE
 AS
 BEGIN
 	IF EXISTS (SELECT 1 FROM pedidos WHERE id IN (SELECT id FROM inserted) AND estado = 'PAGADO')
-	THROW 50010, 'El estado del pedido no permite cancelarlo', 1;
+	BEGIN
+		ROLLBACK TRANSACTION;
+		THROW 50010, 'El estado del pedido no permite cancelarlo', 1;
+	END
 
 	IF EXISTS (SELECT 1 FROM inserted WHERE estado = 'CANCELADO') AND NOT EXISTS (SELECT 1 FROM pedidos WHERE id = (SELECT id FROM inserted) AND estado = 'CANCELADO')
 	BEGIN
