@@ -14,7 +14,7 @@ RETURNS TABLE AS RETURN
 	LEFT JOIN (
 		SELECT dp.libro_id, dp.cantidad, dp.precio_unitario FROM detalle_pedidos as dp
 		JOIN pedidos as p ON p.id = dp.pedido_id
-		WHERE p.estado != 'CANCELADO' AND p.fecha BETWEEN @desde AND @hasta
+		WHERE p.estado != 'CANCELADO' AND p.fecha BETWEEN @desde AND DATEADD(DAY, @hasta,1) -- Contemplamos gastos durante el transcurso del último día
 	) as dp on dp.libro_id = l.id
 	GROUP BY c.nombre
 )

@@ -28,7 +28,7 @@ BEGIN
 			INSERT INTO @resultado (pedido_id, cliente_id, dias_antiguedad) VALUES (
 				@pedido_id, 
 				(SELECT cliente_id FROM pedidos WHERE id = @pedido_id),
-				@dias
+				(SELECT fecha FROM pedidos WHERE id = @pedido_id)
 			);
 
 			UPDATE pedidos set estado = 'CANCELADO' where id = @pedido_id;

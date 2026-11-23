@@ -8,4 +8,4 @@ ALTER TABLE detalle_pedidos ADD constraint unique_pedido_libro UNIQUE (pedido_id
 CREATE INDEX indice_nombre_clientes ON clientes(nombre);
 CREATE INDEX indice_fecha_pedido ON pedidos(fecha);
 
-ALTER TABLE libros ADD CONSTRAINT libros_check_min_stock CHECK(stock > 0);
+ALTER TABLE libros ADD CONSTRAINT libros_check_min_stock CHECK(stock >= 0);
